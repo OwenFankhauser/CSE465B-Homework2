@@ -30,7 +30,8 @@
     [(null? lst) '()] ;Empty...basecase
     [(negative? (car lst))
      (cons (car lst) (negatives (cdr lst)))] ;Keep negative
-    [else (negatives (cdr lst))]) ;Discard positive
+    [else (negatives (cdr lst))] ;Discard positive
+    )
 )
 
 (line "negatives")
@@ -51,7 +52,8 @@
      (and (struct (car lst1) (car lst2)) 
           (struct (cdr lst1) (cdr lst2)))]
     [(or (list? (car lst1)) (list? (car lst2))) #f] ;one is a list, one is not
-    [else (struct (cdr lst1) (cdr lst2))]) ;recursion
+    [else (struct (cdr lst1) (cdr lst2))] ;recursion
+    )
 )
 
 (line "struct")
@@ -65,8 +67,14 @@
 ; in the list and the second is the largest in the list. 
 ; lst -- contains numeric values, and length is >= 1.
 (define (minAndMax lst)
-	'()
-)
+  (define (holder lst curr_min curr_max)
+  (cond
+    [(null? lst) (list curr_min cur_max)] ;Empty... basecase
+    [else
+     (holder (cdr lst)
+             (if (< (car lst) curr_min) (car lst) curr_min) ;replace min
+             (if (> (car lst) curr_max) (car lst) curr_max))])) ;replace max
+  (holder (cdr lst) (car lst) (car lst))) ;initial call
 
 (line "minAndMax")
 (mydisplay (minAndMax '(1 2 -3 4 2)))  ; -> (-3 4)
