@@ -105,8 +105,15 @@
 ; ((1 a) (1 b) (1 c) (2 a) (2 b) (2 c))
 ; lst1 & lst2 -- two flat lists.
 (define (crossproduct lst1 lst2)
-	'()
-)
+  (define (pair_first first lst)
+    (cond
+      [(null? lst) '()] ;Empty...basecase
+      [else (cons (list first (car lst)) ;make a pair list
+                  (pair_first first (cdr lst)))]))
+  (cond
+    [(null? lst1) '()] ;Empty...basecase
+    [else (append (pair_first (car lst1) lst2) ; Pair the first element of lst1 with every element of lst2
+                  (crossproduct (cdr lst1) lst2))])) ;recurison
 
 (line "crossproduct")
 (mydisplay (crossproduct '(1 2) '(a b c)))
