@@ -69,7 +69,7 @@
 (define (minAndMax lst)
   (define (holder lst curr_min curr_max)
   (cond
-    [(null? lst) (list curr_min cur_max)] ;Empty... basecase
+    [(null? lst) (list curr_min curr_max)] ;Empty... basecase
     [else
      (holder (cdr lst)
              (if (< (car lst) curr_min) (car lst) curr_min) ;replace min
@@ -86,8 +86,11 @@
 ; that are inside nested loops taken out. So we want to flatten all elements and have
 ; them all in a single list. For example '(a (a a) a))) should become (a a a a)
 (define (flatten lst)
-	'()
-)
+  (cond
+    [(null? lst) '()] ;Empty... basecase
+    [(list? (car lst)) ;if an element is a list
+     (append (flatten (car lst)) (flatten (cdr lst)))] ;remove first element of nested list and appends in place
+    [else (cons (car lst) (flatten (cdr lst)))])) ;if an element is an atom, do nothing
 
 (line "flatten")
 (mydisplay (flatten '(a b c)))  ; -> (a b c)
