@@ -27,10 +27,10 @@
 ; Return a list with only the negatives items
 (define (negatives lst)
   (cond
-    [(null? lst) '()] ;Empty...basecase
+    [(null? lst) '()] ; Empty...basecase
     [(negative? (car lst))
-     (cons (car lst) (negatives (cdr lst)))] ;Keep negative
-    [else (negatives (cdr lst))] ;Discard positive
+     (cons (car lst) (negatives (cdr lst)))] ; Keep negative
+    [else (negatives (cdr lst))] ; Discard positive
     )
 )
 
@@ -46,13 +46,13 @@
 ; in terms of how many elements and nested lists they have in the same order
 (define (struct lst1 lst2)
   (cond
-    [(and (null? lst1) (null? lst2)) #t] ;Both list empty at the same time...basecase
-    [(or (null? lst1) (null? lst2)) #f] ;One list empties before the other
-    [(and (list? (car lst1)) (list? (car lst2))) ;If elements are lists, check their structures
+    [(and (null? lst1) (null? lst2)) #t] ; Both list empty at the same time...basecase
+    [(or (null? lst1) (null? lst2)) #f] ; One list empties before the other
+    [(and (list? (car lst1)) (list? (car lst2))) ; If elements are lists, check their structures
      (and (struct (car lst1) (car lst2)) 
           (struct (cdr lst1) (cdr lst2)))]
-    [(or (list? (car lst1)) (list? (car lst2))) #f] ;one is a list, one is not
-    [else (struct (cdr lst1) (cdr lst2))] ;recursion
+    [(or (list? (car lst1)) (list? (car lst2))) #f] ; One is a list, one is not
+    [else (struct (cdr lst1) (cdr lst2))] ; Recursion
     )
 )
 
@@ -69,12 +69,12 @@
 (define (minAndMax lst)
   (define (holder lst curr_min curr_max)
   (cond
-    [(null? lst) (list curr_min curr_max)] ;Empty... basecase
+    [(null? lst) (list curr_min curr_max)] ; Empty... basecase
     [else
      (holder (cdr lst)
-             (if (< (car lst) curr_min) (car lst) curr_min) ;replace min
-             (if (> (car lst) curr_max) (car lst) curr_max))])) ;replace max
-  (holder (cdr lst) (car lst) (car lst))) ;initial call
+             (if (< (car lst) curr_min) (car lst) curr_min) ; Replace min
+             (if (> (car lst) curr_max) (car lst) curr_max))])) ;Replace max
+  (holder (cdr lst) (car lst) (car lst))) ; Initial call
 
 (line "minAndMax")
 (mydisplay (minAndMax '(1 2 -3 4 2)))  ; -> (-3 4)
@@ -87,10 +87,10 @@
 ; them all in a single list. For example '(a (a a) a))) should become (a a a a)
 (define (flatten lst)
   (cond
-    [(null? lst) '()] ;Empty... basecase
-    [(list? (car lst)) ;if an element is a list
-     (append (flatten (car lst)) (flatten (cdr lst)))] ;remove first element of nested list and appends in place
-    [else (cons (car lst) (flatten (cdr lst)))])) ;if an element is an atom, do nothing
+    [(null? lst) '()] ; Empty... basecase
+    [(list? (car lst)) ; If an element is a list
+     (append (flatten (car lst)) (flatten (cdr lst)))] ; Remove first element of nested list and appends in place
+    [else (cons (car lst) (flatten (cdr lst)))])) ; If an element is an atom, do nothing
 
 (line "flatten")
 (mydisplay (flatten '(a b c)))  ; -> (a b c)
@@ -107,13 +107,13 @@
 (define (crossproduct lst1 lst2)
   (define (pair_first first lst)
     (cond
-      [(null? lst) '()] ;Empty...basecase
-      [else (cons (list first (car lst)) ;make a pair list
+      [(null? lst) '()] ; Empty...basecase
+      [else (cons (list first (car lst)) ; Make a pair list
                   (pair_first first (cdr lst)))]))
   (cond
-    [(null? lst1) '()] ;Empty...basecase
+    [(null? lst1) '()] ; Empty...basecase
     [else (append (pair_first (car lst1) lst2) ; Pair the first element of lst1 with every element of lst2
-                  (crossproduct (cdr lst1) lst2))])) ;recurison
+                  (crossproduct (cdr lst1) lst2))])) ;Recurison
 
 (line "crossproduct")
 (mydisplay (crossproduct '(1 2) '(a b c)))
@@ -133,12 +133,12 @@
       ((null? entries) '()) ; Empty...basecase
       ((= (car (car entries)) zipcode) ; Check first entry
        (let ((entry (car entries)))
-         (if (= (length entry) 6) ;Validate line
+         (if (= (length entry) 6) ; Validate line
              (list (list-ref entry 4) ; Find latitude (element 5) and longitude (element 6)
                    (list-ref entry 5))
-             '()))) ;Return empty if not found
-      (else (find (cdr entries))))) ;recursion
-  (find zips)) ;initial call
+             '()))) ; Return empty if not found
+      (else (find (cdr entries))))) ; Recursion
+  (find zips)) ; Initial call
 
 
 
@@ -152,7 +152,7 @@
 ; state2 -- the second state to look for
 ; zips -- the zipcode DB
 (define (getCommonPlaces state1 state2 zips)
-  (define (cities-by-state state zips) ; collect cities in each state
+  (define (cities-by-state state zips) ; Collect cities in each state
     (if (null? zips) ; Empty... basecase
         '()
         (let ((current (car zips))
@@ -183,12 +183,12 @@
 (define (zipCount state zips)
   (define (count entries)
     (cond
-      ((null? entries) 0) ;Empty... basecase
+      ((null? entries) 0) ; Empty... basecase
       ((equal? (caddr (car entries)) state) ; Check
-       (+ 1 (count (cdr entries)))) ;If  match, add 1
-      (else (count (cdr entries))))) ;If no match, do nothing
+       (+ 1 (count (cdr entries)))) ; If  match, add 1
+      (else (count (cdr entries))))) ; If no match, do nothing
 
-  (count zips)) ;intial call
+  (count zips)) ; Intial call
 
 (line "zipCount")
 (mydisplay (zipCount "OH" zipcodes))
@@ -211,15 +211,15 @@
   (define (satisfies_all element filters)
     (cond
       ((null? filters) #t) ; Empty... basecase
-      ((not ((car filters) element)) #f) ;Doesn't pass predicate check
+      ((not ((car filters) element)) #f) ; Doesn't pass predicate check
       (else (satisfies_all element (cdr filters)))))
   (define (filter_elements lst filters)
     (cond
-      ((null? lst) '()) ;Empty... basecase
-      ((satisfies_all (car lst) filters); check?
+      ((null? lst) '())  ;Empty... basecase
+      ((satisfies_all (car lst) filters); Check?
        (cons (car lst) (filter_elements (cdr lst) filters)))
       (else (filter_elements (cdr lst) filters))))
-  (filter_elements lst filters)) ;Initial call
+  (filter_elements lst filters)) ; Initial call
 
 
 (line "filterList")
