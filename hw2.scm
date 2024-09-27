@@ -128,8 +128,19 @@
 ; from the 'zipcodes.scm' file for this. You can just call 'zipcodes' directly
 ; as shown in the sample example
 (define (getLatLon zipcode zips)
-	(list zipcode (car zips))
-)
+    (define (find entries)
+    (cond
+      ((null? entries) '()) ; Empty...basecase
+      ((= (car (car entries)) zipcode) ; Check first entry
+       (let ((entry (car entries)))
+         (if (= (length entry) 6) ;Validate line
+             (list (list-ref entry 4) ; Find latitude (element 5) and longitude (element 6)
+                   (list-ref entry 5))
+             '()))) ;Return empty if not found
+      (else (find (cdr entries))))) ;recursion
+  (find zips)) ;initial call
+
+
 
 (line "getLatLon")
 (mydisplay (getLatLon 45056 zipcodes))
