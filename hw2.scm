@@ -190,8 +190,19 @@
 ; filters -- list of predicates to apply to the individual elements
 
 (define (filterList lst filters)
-	lst
-)
+  (define (satisfies_all element filters)
+    (cond
+      ((null? filters) #t) ; Empty... basecase
+      ((not ((car filters) element)) #f) ;Doesn't pass predicate check
+      (else (satisfies_all element (cdr filters)))))
+  (define (filter_elements lst filters)
+    (cond
+      ((null? lst) '()) ;Empty... basecase
+      ((satisfies_all (car lst) filters); check?
+       (cons (car lst) (filter_elements (cdr lst) filters)))
+      (else (filter_elements (cdr lst) filters))))
+  (filter_elements lst filters)) ;Initial call
+
 
 (line "filterList")
 (mydisplay (filterList '(1 2 3 11 22 33 -1 -2 -3 -11 -22 -33) (list POS?)))
