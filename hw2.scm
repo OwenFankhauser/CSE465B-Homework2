@@ -152,7 +152,25 @@
 ; state2 -- the second state to look for
 ; zips -- the zipcode DB
 (define (getCommonPlaces state1 state2 zips)
-  '())
+  (define (cities-by-state state zips) ; collect cities in each state
+    (if (null? zips) ; Empty... basecase
+        '()
+        (let ((current (car zips))
+              (next (cdr zips)))
+          (if (string=? (third current) state)
+              (cons (second current) (cities-by-state state next))
+              (cities-by-state state next)))))
+  (define cities1 (cities-by-state state1 zips)) ; Collect cities list for both states
+  (define cities2 (cities-by-state state2 zips))
+  (define (common-cities cities1 cities2 result) ; Find intersection, add only if not already on list
+    (if (null? cities1)
+        result
+        (let ((current (car cities1))
+              (next (cdr cities1)))
+          (if (and (member current cities2) (not (member current result)))
+              (common-cities next cities2 (cons current result))
+              (common-cities next cities2 result)))))
+  (common-cities cities1 cities2 '()))
 
 (line "getCommonPlaces")
 (mydisplay (getCommonPlaces "OH" "MI" zipcodes))
