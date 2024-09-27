@@ -152,8 +152,7 @@
 ; state2 -- the second state to look for
 ; zips -- the zipcode DB
 (define (getCommonPlaces state1 state2 zips)
-	(list state1 state2)
-)
+  '())
 
 (line "getCommonPlaces")
 (mydisplay (getCommonPlaces "OH" "MI" zipcodes))
@@ -164,8 +163,14 @@
 ; state -- state
 ; zips -- zipcode DB
 (define (zipCount state zips)
-	0
-)
+  (define (count entries)
+    (cond
+      ((null? entries) 0) ;Empty... basecase
+      ((equal? (caddr (car entries)) state) ; Check
+       (+ 1 (count (cdr entries)))) ;If  match, add 1
+      (else (count (cdr entries))))) ;If no match, do nothing
+
+  (count zips)) ;intial call
 
 (line "zipCount")
 (mydisplay (zipCount "OH" zipcodes))
